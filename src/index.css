@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  color: #232b30;
+  font-feature-settings: 'kern' 1;
+}
+
+/* Delikatna tekstura tła, żeby nie było płaskiej bieli */
+.bg-texture {
+  background-color: #f4f7f8;
+  background-image:
+    radial-gradient(circle at 15% 8%, rgba(92, 122, 136, 0.035) 0%, transparent 45%),
+    radial-gradient(circle at 85% 92%, rgba(92, 122, 136, 0.03) 0%, transparent 40%);
+}
+
+::selection {
+  background: #cdd9de;
+}
+
+/* pasek przewijania - stonowany, nie systemowy default na Windows wygląda ciężko w admin appce */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cdd9de;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a9bcc4;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #496372;
+  outline-offset: 2px;
+}
+
+/* karuzela źródeł - scroll snap zamiast animowanych bibliotek, poczucie "ręcznie zrobionego" */
+.snap-row {
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-item {
+  scroll-snap-align: start;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

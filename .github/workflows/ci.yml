@@ -1,0 +1,26 @@
+name: CI
+
+# Odpala się na każdym Pull Requeście do main. Dzięki temu na GitHubie widać zielony/czerwony
+# znaczek przy PR-ze jeszcze przed wdrożeniem na GitHub Pages (to robi osobny workflow Pages).
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm test
+      - run: npm run build

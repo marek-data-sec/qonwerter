@@ -1,0 +1,58 @@
+{
+  "name": "qonwerter",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Qonwerter - narzędzia do plików w przeglądarce: konwersja obrazów, PDF i kody QR z logo. Działają lokalnie, także offline jako pojedynczy plik HTML.",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && node scripts/postbuild.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@fontsource/source-sans-3": "^5.2.5",
+    "@fontsource/source-serif-4": "^5.2.5",
+    "fflate": "^0.8.2",
+    "jsqr": "^1.4.0",
+    "lucide-react": "^0.446.0",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38",
+    "qrcode-generator": "^2.0.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "@vitest/coverage-v8": "^4.1.12",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "jsdom": "^27.4.0",
+    "postcss": "^8.4.47",
+    "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.11",
+    "typescript": "~5.6.3",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^7.3.7",
+    "vite-plugin-singlefile": "^2.0.3",
+    "vitest": "^4.1.12"
+  },
+  "overrides": {
+    "minimatch": "^11.0.1"
+  }
+}
