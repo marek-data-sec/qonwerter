@@ -173,7 +173,7 @@ export function FileList({
   if (!files.length) return null;
   const total = files.reduce((s, f) => s + f.size, 0);
   const iconBtn =
-    'p-1.5 rounded text-brand-500 hover:bg-brand-100 hover:text-brand-800 disabled:opacity-30 disabled:hover:bg-transparent';
+    'p-1.5 [@media(pointer:coarse)]:p-2.5 rounded text-brand-500 hover:bg-brand-100 hover:text-brand-800 disabled:opacity-30 disabled:hover:bg-transparent';
   return (
     <Card>
       <div className="flex items-center justify-between px-3 py-2 border-b border-brand-100">
@@ -285,7 +285,7 @@ export function ResultList({
             <Button
               variant="secondary"
               onClick={() => saveBlob(r.blob, r.name)}
-              className="!px-2.5 !py-1.5"
+              className="!px-3.5 !py-3"
               aria-label={`Pobierz ${r.name}`}
             >
               <Download size={15} />
@@ -316,10 +316,13 @@ export function ToolLayout({
       <p className="mt-1 mb-5 max-w-2xl text-sm text-brand-500 text-left sm:text-justify">
         {sklejKrotkie(lead)}
       </p>
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-        <div className="space-y-4 lg:col-start-1 lg:row-start-1">{input}</div>
-        <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-20">{settings}</div>
-        <div className="space-y-4 lg:col-start-1 lg:row-start-2">{output}</div>
+      {/* minmax(0,1fr) także na telefonie: bez tego kolumna rozciąga się do najdłuższej nazwy pliku i rozpycha całą stronę */}
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+        <div className="min-w-0 space-y-4 lg:col-start-1 lg:row-start-1">{input}</div>
+        <div className="min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-20">
+          {settings}
+        </div>
+        <div className="min-w-0 space-y-4 lg:col-start-1 lg:row-start-2">{output}</div>
       </div>
     </section>
   );

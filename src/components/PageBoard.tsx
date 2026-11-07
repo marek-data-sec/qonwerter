@@ -111,7 +111,7 @@ function RowThumb({ item }: { item: PageItem }) {
 }
 
 const iconBtn =
-  'p-1.5 rounded text-brand-500 hover:bg-brand-100 hover:text-brand-800 disabled:opacity-30 disabled:hover:bg-transparent focus-ring';
+  'p-1.5 [@media(pointer:coarse)]:p-2.5 rounded text-brand-500 hover:bg-brand-100 hover:text-brand-800 disabled:opacity-30 disabled:hover:bg-transparent focus-ring';
 
 function Actions({
   index,
@@ -366,7 +366,7 @@ export default function PageBoard({
                   >
                     {i + 1}. {item.file.name}
                   </p>
-                  <div data-nodrag className="flex items-center">
+                  <div data-nodrag className="flex flex-wrap items-center justify-center">
                     <Actions index={i} {...actions} />
                   </div>
                 </li>

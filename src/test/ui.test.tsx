@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { DropZone, FileList } from '../components/ui';
+import { DropZone, FileList, ToolLayout } from '../components/ui';
 
 const plik = (nazwa: string, typ: string) => new File(['x'], nazwa, { type: typ });
 
@@ -62,5 +62,19 @@ describe('FileList', () => {
   it('nic nie renderuje przy pustej liście', () => {
     const { container } = render(<FileList files={[]} onRemove={() => {}} onClear={() => {}} />);
     expect(container).toBeEmptyDOMElement();
+  });
+});
+
+describe('ToolLayout', () => {
+  // Bez zdefiniowanej kolumny na telefonie przeglądarka rozciąga siatkę do szerokości najdłuższej
+  // nazwy pliku i cała strona wychodzi poza ekran (przyciski w prawym rogu wierszy stają się niedostępne).
+  it('na telefonie ma kolumnę, która może się zwęzić poniżej szerokości zawartości', () => {
+    const { container } = render(
+      <ToolLayout title="t" lead="l" input={<p>a</p>} settings={<p>b</p>} output={null} />
+    );
+    const siatka = container.querySelector('.grid') as HTMLElement;
+    expect(siatka.className).toContain('grid-cols-[minmax(0,1fr)]');
+    for (const dziecko of Array.from(siatka.children))
+      expect((dziecko as HTMLElement).className).toContain('min-w-0');
   });
 });
