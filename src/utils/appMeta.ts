@@ -23,8 +23,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: '2026-11-08',
     changes: [
       'Menu główne z opisem narzędzi, klikalne logo i link powrotu do menu',
-      'Podpowiedź w przeglądarkach wbudowanych w aplikacje (Messenger, Facebook), w których pobieranie plików nie działa',
-      'Poprawiony układ na telefonie przy długich nazwach plików i większe przyciski dotykowe'
     ]
   },
   {
