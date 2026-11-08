@@ -10,6 +10,7 @@ import { AlertTriangle, ArrowDown, ArrowUp, Download, FileText, Loader2, Upload,
 import { formatBytes } from '../utils/format';
 import { saveBlob, zipBlobs } from '../utils/download';
 import { sklejKrotkie } from '../utils/typografia';
+import { isInAppBrowser } from '../utils/env';
 
 export const inputCls =
   'w-full rounded-md border border-brand-200 bg-white px-2.5 py-1.5 text-sm text-brand-900 focus-ring';
@@ -266,6 +267,7 @@ export function ResultList({
           </Button>
         )}
       </div>
+      <InAppBrowserNotice compact className="border-b border-brand-100 p-3" />
       <ul className="divide-y divide-brand-100 max-h-[32rem] overflow-y-auto">
         {items.map((r) => (
           <li key={r.id} className="flex items-center gap-2.5 px-3 py-2">
@@ -312,6 +314,12 @@ export function ToolLayout({
 }) {
   return (
     <section>
+      <a
+        href="#menu"
+        className="mb-2 inline-block text-xs text-brand-500 underline decoration-dotted hover:text-brand-800 focus-ring"
+      >
+        ← Menu główne
+      </a>
       <h1 className="font-serif text-xl font-semibold text-brand-900">{title}</h1>
       <p className="mt-1 mb-5 max-w-2xl text-sm text-brand-500 text-left sm:text-justify">
         {sklejKrotkie(lead)}
@@ -344,4 +352,48 @@ export function useFileList() {
         return next;
       })
   };
+}
+
+// W przeglądarce wbudowanej w aplikację (Messenger, Facebook...) pobieranie plików zwykle nie działa. Zamiast
+// zostawić człowieka z przyciskiem, który nic nie robi, mówimy, co zrobić.
+export function InAppBrowserNotice({
+  compact = false,
+  className = ''
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
+  const [copied, setCopied] = useState<'tak' | 'nie' | null>(null);
+  if (!isInAppBrowser()) return null;
+  const address = location.href.split('#')[0];
+
+  async function copyAddress() {
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopied('tak');
+    } catch {
+      setCopied('nie');
+    }
+  }
+
+  return (
+    <div className={className}>
+      <Notice>
+        <p className="font-medium">Pobieranie plików może tu nie działać</p>
+        <p className="mt-1">
+          {sklejKrotkie(
+            compact
+              ? 'Strona jest otwarta w przeglądarce wbudowanej w aplikację, która zwykle blokuje pobieranie. Otwórz ją w Chrome albo innej zwykłej przeglądarce.'
+              : 'Strona jest otwarta w przeglądarce wbudowanej w aplikację (np. Messenger, Facebook, Instagram), a takie przeglądarki zwykle blokują pobieranie plików. Otwórz ją w Chrome albo innej zwykłej przeglądarce: w menu (⋯) poszukaj opcji „Otwórz w przeglądarce” lub „Otwórz w Chrome”.'
+          )}
+        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <Button variant="secondary" onClick={() => void copyAddress()} className="!py-1.5 text-xs">
+            {copied === 'tak' ? 'Skopiowano' : 'Skopiuj adres strony'}
+          </Button>
+          {copied === 'nie' && <span className="select-all break-all text-xs">{address}</span>}
+        </div>
+      </Notice>
+    </div>
+  );
 }

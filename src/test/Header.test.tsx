@@ -32,6 +32,24 @@ describe('Header', () => {
     fireEvent.click(screen.getAllByRole('link', { name: 'Obrazy' })[1]);
     expect(screen.queryByRole('navigation', { name: 'Narzędzia (menu)' })).not.toBeInTheDocument();
   });
+
+  it('logo prowadzi do menu głównego i jest oznaczone jako bieżąca strona na menu', () => {
+    const { rerender } = render(<Header tools={narzedzia} active="obrazy" />);
+    const logo = screen.getByRole('link', { name: /Qonwerter/ });
+    expect(logo).toHaveAttribute('href', '#menu');
+    expect(logo).not.toHaveAttribute('aria-current');
+    rerender(<Header tools={narzedzia} active="menu" />);
+    expect(screen.getByRole('link', { name: /Qonwerter/ })).toHaveAttribute('aria-current', 'page');
+  });
+
+  it('rozwijane menu na telefonie zaczyna się od pozycji „Menu główne”', () => {
+    render(<Header tools={narzedzia} active="obrazy" />);
+    fireEvent.click(screen.getByRole('button', { name: 'Menu' }));
+    const nav = screen.getByRole('navigation', { name: 'Narzędzia (menu)' });
+    const linki = Array.from(nav.querySelectorAll('a')).map((a) => a.textContent);
+    expect(linki[0]).toBe('Menu główne');
+    expect(nav.querySelector('a')).toHaveAttribute('href', '#menu');
+  });
 });
 
 describe('ChangelogModal', () => {

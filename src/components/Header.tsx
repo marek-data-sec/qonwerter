@@ -33,7 +33,12 @@ export default function Header({ tools, active }: { tools: ToolDef[]; active: st
     <header className="no-print bg-white border-b border-brand-200 sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16 gap-2">
-          <div className="flex items-center gap-2.5 shrink-0">
+          <a
+            href="#menu"
+            title="Menu główne"
+            aria-current={active === 'menu' ? 'page' : undefined}
+            className="flex shrink-0 items-center gap-2.5 rounded transition-opacity hover:opacity-80 focus-ring"
+          >
             <div className="w-9 h-9 rounded-md bg-brand-700 flex items-center justify-center shrink-0">
               <ArrowRightLeft size={19} className="text-brand-50" strokeWidth={2} />
             </div>
@@ -43,7 +48,7 @@ export default function Header({ tools, active }: { tools: ToolDef[]; active: st
               </div>
               <div className="text-[11px] text-brand-500 -mt-0.5 whitespace-nowrap">{APP_TAGLINE}</div>
             </div>
-          </div>
+          </a>
 
           {/* Pełna nawigacja dopiero od 1024px (lg), niżej jest menu rozwijane. */}
           <nav aria-label="Narzędzia" className="hidden lg:flex items-center gap-0.5 overflow-x-auto">
@@ -89,6 +94,15 @@ export default function Header({ tools, active }: { tools: ToolDef[]; active: st
 
         {open && (
           <nav aria-label="Narzędzia (menu)" className="lg:hidden pb-3 flex flex-col gap-1">
+            <a
+              href="#menu"
+              onClick={() => setOpen(false)}
+              className={`rounded px-3 py-2.5 text-sm font-medium ${
+                active === 'menu' ? 'bg-brand-100 text-brand-800' : 'text-brand-600'
+              }`}
+            >
+              Menu główne
+            </a>
             {tools.map(({ id, label }) => (
               <a
                 key={id}

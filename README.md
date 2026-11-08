@@ -22,9 +22,12 @@ na GitHubie wpisz w adresie Pages. Tytuł karty, nagłówek, pliki ZIP i `Urucho
 
 ## Co jest w środku
 
-Menu ma pięć pozycji, a każda to osobne narzędzie. Wybór zapisuje się w adresie (`#obrazy`,
-`#obrazy-pdf`, `#pdf-obrazy`, `#pdf`, `#qr`), więc działa tak samo na GitHub Pages i z pliku na dysku, bez
-konfiguracji serwera. Przełączenie zakładki nie kasuje listy wgranych plików.
+Po wejściu na stronę widać menu główne (`#menu`): krótki opis aplikacji i pięć kart, z których każda prowadzi
+do osobnego narzędzia. Do menu wraca się klikając logo w nagłówku albo link „← Menu główne” nad tytułem
+narzędzia, a na telefonie jest też pierwszą pozycją rozwijanego menu. Wybór widoku zapisuje się w adresie
+(`#obrazy`, `#obrazy-pdf`, `#pdf-obrazy`, `#pdf`, `#qr`), więc działa tak samo na GitHub Pages i z pliku na
+dysku, bez konfiguracji serwera. Pusty lub nieznany adres otwiera menu. Przełączenie widoku nie kasuje listy
+wgranych plików.
 
 **Obrazy** (`#obrazy`) - konwersja wielu plików naraz między PNG, JPG i WebP. Jakość (dla JPG i WebP),
 maksymalny dłuższy bok w pikselach (obrazy nigdy nie są powiększane) i kolor tła dla przezroczystości,
@@ -83,6 +86,12 @@ obsługiwany przez większość przeglądarek. Aplikacja zgłasza to komunikatem
 pliki konwertuje dalej. PDF z niestandardowymi czcionkami (zwłaszcza CJK) może w wersji offline
 renderować się bez części znaków, bo mapy znaków pdf.js nie są dołączone.
 
+Przeglądarki wbudowane w aplikacje (Messenger, Facebook, Instagram i podobne) zwykle nie obsługują pobierania
+plików: przycisk się klika, ale nic się nie zapisuje. Aplikacja rozpoznaje je po identyfikatorze przeglądarki
+i pokazuje podpowiedź, żeby otworzyć stronę w Chrome albo innej zwykłej przeglądarce (u góry strony, nad listą
+wyników i przy przyciskach kodu QR). Rozpoznawanie jest zgadywaniem po nazwie, więc czasem może się pomylić
+w obie strony.
+
 ## Uruchomienie lokalne
 
 Wymagania: Node.js 20.19+, 22.13+ albo 24+ (CI używa 22). Pilnuje tego pole `engines` w `package.json`, więc
@@ -112,14 +121,15 @@ z hashem skryptu i pakuje ZIP.
 
 ## Testy
 
-Vitest + Testing Library, katalog `src/test/`, około 60 testów. Trzy warstwy:
+Vitest + Testing Library, katalog `src/test/`, około 90 testów. Trzy warstwy:
 
-1. **Logika** (`format`, `typografia`, `usePersistentState`, `storage`, `qr`) - parser zakresów stron, nazwy
+1. **Logika** (`format`, `typografia`, `usePersistentState`, `storage`, `qr`, `env`, `useHashRoute`) - parser zakresów stron, nazwy
    plików bez kolizji w ZIP-ie, kodowanie polskich liter w kodzie QR, układ strony PDF, limity długości tekstu, zgodność SVG
-   z macierzą kodu, ostrzeżenia o kolorach, zapamiętywanie ustawień (w tym uszkodzony JSON i stary zapis bez nowych
+   z macierzą kodu, ostrzeżenia o kolorach, rozpoznawanie przeglądarek wbudowanych w aplikacje (na prawdziwych identyfikatorach
+   Messengera, Facebooka i zwykłych przeglądarek), wybór widoku z adresu, zapamiętywanie ustawień (w tym uszkodzony JSON i stary zapis bez nowych
    pól), czyszczenie tylko własnych kluczy. `appVersion.test.ts` pilnuje, żeby wersja w `package.json`
    zgadzała się z `appMeta.ts`.
-2. **Komponenty** (`ui`, `Header`, `PageBoard`, `ErrorBoundary`, `ChangelogModal`) - strefa upuszczania plików
+2. **Komponenty** (`ui`, `Header`, `Home`, `PageBoard`, `InAppBrowserNotice`, `ErrorBoundary`, `ChangelogModal`) - strefa upuszczania plików
    (filtr po typie i rozszerzeniu), lista plików ze zmianą kolejności, menu na wąskim ekranie, link do ZIP-a.
 
 3. **Prywatność** (`privacy.test.ts`) - pilnuje deklaracji z interfejsu. Kod w `src/` nie może zawierać
@@ -171,17 +181,18 @@ qonwerter/
 │   │   ├── PdfToImages.tsx            ← PDF → obrazy (pdf.js)
 │   │   ├── PdfTools.tsx               ← scalanie, wyodrębnianie, rozdzielanie
 │   │   └── QrCode.tsx                 ← kody QR z logo, podgląd na żywo, PNG i SVG
-│   ├── components/                nagłówek, DisclaimerBar, ChangelogModal, ErrorBoundary,
+│   ├── components/                nagłówek, Home (menu główne), DisclaimerBar, ChangelogModal, ErrorBoundary,
 │   │                              PageBoard.tsx (kafelki stron z przeciąganiem, widok listy),
 │   │                              ui.tsx (DropZone, FileList, ResultList, ToolLayout, pola formularza)
 │   ├── utils/
 │   │   ├── image.ts                   ← wczytanie, skalowanie i zapis przez canvas
 │   │   ├── pdf.ts                     ← pdf.js, worker jako blob, renderowanie stron
+│   │   ├── env.ts                     ← rozpoznawanie przeglądarek wbudowanych w aplikacje
 │   │   ├── pdfLayout.ts               ← układ strony PDF (wspólny dla podglądu i pliku)
 │   │   ├── qr.ts                      ← macierz kodu, rysowanie, eksport SVG, test odczytu
 │   │   ├── download.ts                ← zapis pliku i ZIP (fflate)
 │   │   ├── format.ts                  ← rozmiary, nazwy bez kolizji, parser zakresu stron
-│   │   ├── usePersistentState.ts, storage.ts, typografia.ts, appMeta.ts
+│   │   ├── usePersistentState.ts, useHashRoute.ts, storage.ts, typografia.ts, appMeta.ts
 │   ├── test/                      testy (Vitest)
 │   ├── App.tsx                    zakładki na hashu, ErrorBoundary, stopka
 │   └── main.tsx

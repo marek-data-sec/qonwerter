@@ -1,42 +1,62 @@
-import { useEffect, useState } from 'react';
 import { Files, FileImage, Image as ImageIcon, FileOutput, QrCode as QrIcon } from 'lucide-react';
 import Header, { type ToolDef } from './components/Header';
 import DisclaimerBar from './components/DisclaimerBar';
 import ChangelogModal from './components/ChangelogModal';
 import ErrorBoundary from './components/ErrorBoundary';
+import Home from './components/Home';
+import { InAppBrowserNotice } from './components/ui';
 import ImageConverter from './tools/ImageConverter';
 import ImagesToPdf from './tools/ImagesToPdf';
 import PdfToImages from './tools/PdfToImages';
 import PdfTools from './tools/PdfTools';
 import QrCode from './tools/QrCode';
+import { HOME, useHashRoute } from './utils/useHashRoute';
 
-const tools: (ToolDef & { el: JSX.Element })[] = [
-  { id: 'obrazy', label: 'Obrazy', icon: ImageIcon, el: <ImageConverter /> },
-  { id: 'obrazy-pdf', label: 'Obrazy → PDF', icon: FileOutput, el: <ImagesToPdf /> },
-  { id: 'pdf-obrazy', label: 'PDF → obrazy', icon: FileImage, el: <PdfToImages /> },
-  { id: 'pdf', label: 'Narzędzia PDF', icon: Files, el: <PdfTools /> },
-  { id: 'qr', label: 'Kody QR', icon: QrIcon, el: <QrCode /> }
+const tools: (ToolDef & { el: JSX.Element; description: string })[] = [
+  {
+    id: 'obrazy',
+    label: 'Obrazy',
+    icon: ImageIcon,
+    el: <ImageConverter />,
+    description:
+      'Zamień wiele obrazów naraz na PNG, JPG albo WebP. Możesz je też zmniejszyć lub skompresować.'
+  },
+  {
+    id: 'obrazy-pdf',
+    label: 'Obrazy → PDF',
+    icon: FileOutput,
+    el: <ImagesToPdf />,
+    description:
+      'Złóż jeden PDF z kilku obrazów. Strony ułożysz na kafelkach, obrócisz i przeciągniesz w odpowiednie miejsce.'
+  },
+  {
+    id: 'pdf-obrazy',
+    label: 'PDF → obrazy',
+    icon: FileImage,
+    el: <PdfToImages />,
+    description: 'Zapisz strony PDF jako obrazy PNG, JPG albo WebP. Wybierasz strony i rozdzielczość.'
+  },
+  {
+    id: 'pdf',
+    label: 'Narzędzia PDF',
+    icon: Files,
+    el: <PdfTools />,
+    description: 'Scal kilka PDF-ów w jeden, wyciągnij wybrane strony albo rozdziel dokument na osobne pliki.'
+  },
+  {
+    id: 'qr',
+    label: 'Kody QR',
+    icon: QrIcon,
+    el: <QrCode />,
+    description:
+      'Zrób kod QR z tekstu lub adresu strony i dodaj własne logo. Pobierzesz go jako PNG albo SVG.'
+  }
 ];
 
-function useHashTool(): string {
-  const read = () => {
-    const h = location.hash.replace(/^#\/?/, '');
-    return tools.some((t) => t.id === h) ? h : tools[0].id;
-  };
-  const [id, setId] = useState(read);
-  useEffect(() => {
-    const onChange = () => {
-      setId(read());
-      window.scrollTo(0, 0);
-    };
-    window.addEventListener('hashchange', onChange);
-    return () => window.removeEventListener('hashchange', onChange);
-  }, []);
-  return id;
-}
+const ids = tools.map((t) => t.id);
 
 export default function App() {
-  const active = useHashTool();
+  const active = useHashRoute(ids);
   return (
     <div className="min-h-screen bg-texture flex flex-col">
       <a
@@ -53,13 +73,17 @@ export default function App() {
       <DisclaimerBar />
       <Header tools={tools} active={active} />
       <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl mx-auto w-full px-4 py-6 md:py-8">
+        <InAppBrowserNotice className="mb-5" />
         <ErrorBoundary>
-          {/* Wszystkie narzędzia zostają zamontowane, żeby przełączenie zakładki nie kasowało listy plików */}
+          {/* Wszystkie narzędzia zostają zamontowane, żeby przełączenie widoku nie kasowało listy plików */}
           {tools.map((t) => (
             <div key={t.id} hidden={t.id !== active}>
               {t.el}
             </div>
           ))}
+          <div hidden={active !== HOME}>
+            <Home items={tools} />
+          </div>
         </ErrorBoundary>
       </main>
       <footer className="no-print border-t border-brand-200 bg-white">

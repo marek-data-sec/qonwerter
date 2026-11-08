@@ -1,7 +1,7 @@
 {
   "name": "qonwerter",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Qonwerter - narzędzia do plików w przeglądarce: konwersja obrazów, PDF i kody QR z logo. Działają lokalnie, także offline jako pojedynczy plik HTML.",
   "engines": {

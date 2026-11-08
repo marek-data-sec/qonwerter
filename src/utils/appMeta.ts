@@ -4,7 +4,7 @@
 
 import config from '../../app.config.json';
 
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.1.0';
 
 // Nazwa aplikacji pochodzi z app.config.json (jedno miejsce do zmiany, patrz README)
 export const APP_NAME: string = config.name;
@@ -18,6 +18,15 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.1.0',
+    date: '2026-11-08',
+    changes: [
+      'Menu główne z opisem narzędzi, klikalne logo i link powrotu do menu',
+      'Podpowiedź w przeglądarkach wbudowanych w aplikacje (Messenger, Facebook), w których pobieranie plików nie działa',
+      'Poprawiony układ na telefonie przy długich nazwach plików i większe przyciski dotykowe'
+    ]
+  },
   {
     version: '1.0.0',
     date: '2026-11-03',

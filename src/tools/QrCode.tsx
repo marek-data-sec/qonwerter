@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, Download, QrCode as QrIcon, XCircle } from 'lucide-react';
-import { Button, Card, DropZone, Field, FileList, Notice, ToolLayout, inputCls } from '../components/ui';
+import {
+  Button,
+  Card,
+  DropZone,
+  Field,
+  FileList,
+  InAppBrowserNotice,
+  Notice,
+  ToolLayout,
+  inputCls
+} from '../components/ui';
 import {
   buildMatrix,
   colorWarning,
@@ -168,6 +178,7 @@ export default function QrCode() {
                 Test odczytu się nie powiódł. Zmniejsz logo, zwiększ kontrast albo skróć tekst.
               </p>
             )}
+            {ready && <InAppBrowserNotice compact className="mt-3" />}
             {ready && (
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button onClick={downloadPng}>
